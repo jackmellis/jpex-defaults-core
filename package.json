@@ -1,0 +1,19 @@
+{
+  "name": "jpex-defaults-core",
+  "version": "2.0.0",
+  "description": "Core factories for Jpex",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackmellis/jpex-defaults-core.git"
+  },
+  "author": "Jack Ellis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jackmellis/jpex-defaults-core/issues"
+  },
+  "homepage": "https://github.com/jackmellis/jpex-defaults-core#readme"
+}
