@@ -1,3 +1,3 @@
 module.exports = function () {
-  return Promise;
+    return Promise; // eslint-disable-line
 };

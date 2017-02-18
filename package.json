@@ -1,10 +1,17 @@
 {
-  "name": "jpex-defaults-core",
+  "name": "jpex-defaults",
   "version": "2.0.0",
   "description": "Core factories for Jpex",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine",
+    "coverage": "nyc jasmine",
+    "lint": "eslint src --fix",
+    "lcov-fix": "node node_modules/jpex-build-tools/lcov-fix",
+    "build": "node node_modules/jpex-build-tools/build --entry ./src --output ./dist/jpex-defaults.js --name jpexDefaults && node node_modules/jpex-build-tools/build --entry ./src --output ./dist/jpex-defaults.min.js --name jpexDefaults  --minify",
+    "publish-please": "publish-please",
+    "prepublish": "publish-please guard",
+    "travis-prepublish" : "node node_modules/jpex-build-tools/travis-prepublish"
   },
   "repository": {
     "type": "git",
@@ -15,5 +22,16 @@
   "bugs": {
     "url": "https://github.com/jackmellis/jpex-defaults-core/issues"
   },
-  "homepage": "https://github.com/jackmellis/jpex-defaults-core#readme"
+  "homepage": "https://github.com/jackmellis/jpex-defaults-core#readme",
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "jasmine": "^2.5.3",
+    "jpex": "^2.0.0-alpha.0",
+    "jpex-build-tools": "git+https://github.com/jackmellis/jpex-build-tools.git",
+    "nyc": "^10.1.2",
+    "publish-please": "^2.2.0"
+  },
+  "peerDependencies" : {
+    "jpex" : "^2.0.0"
+  }
 }

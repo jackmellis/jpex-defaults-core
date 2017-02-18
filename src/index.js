@@ -8,21 +8,25 @@ var $immediate = require('./$immediate');
 var $typeof = require('./$typeof');
 
 exports.install = function (options) {
-  var Jpex = options.Jpex;
+    var Jpex = options.Jpex;
 
-  Jpex.register.factory('$copy', ['$typeof'], $copy).lifecycle.application();
+    Jpex.register.factory('$copy', ['$typeof'], $copy).lifecycle.application();
 
-  Jpex.register.factory('$log', [], $log).lifecycle.application();
+    Jpex.register.factory('$log', [], $log).lifecycle.application();
 
-  Jpex.register.factory('$$promise', [], $$promise).lifecycle.application();
+    Jpex.register.factory('$$promise', [], $$promise).lifecycle.application();
 
-  Jpex.register.factory('$promise', ['$$promise'], $promise).lifecycle.application();
+    Jpex.register.factory('$promise', ['$$promise'], $promise).lifecycle.application();
 
-  Jpex.register.factory('$timeout', [], $timeout).lifecycle.application();
+    Jpex.register.factory('$timeout', [], $timeout).lifecycle.application();
 
-  Jpex.register.factory('$interval', [], $interval).lifecycle.application();
+    Jpex.register.factory('$interval', [], $interval).lifecycle.application();
 
-  Jpex.register.factory('$immediate', ['$timeout'], $immediate).lifecycle.application();
+    Jpex.register.factory('$immediate', ['$timeout'], $immediate).lifecycle.application();
 
-  Jpex.register.factory('$typeof', [], $typeof).lifecycle.application();
+    Jpex.register.factory('$typeof', [], $typeof).lifecycle.application();
 };
+
+if (typeof window !== 'undefined' && window.Jpex && typeof window.Jpex.use === 'function'){
+    window.Jpex.use(exports);
+}
