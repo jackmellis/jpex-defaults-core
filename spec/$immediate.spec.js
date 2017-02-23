@@ -12,7 +12,7 @@ describe("$immediate", function () {
   it("should set an immediate timeout", function (done) {
     $immediate(done);
   });
-  
+
   it("should clear an immediate timeout", function (done) {
     var called = false;
     var timer = $immediate(function () {
@@ -29,7 +29,7 @@ describe("$immediate", function () {
   it("should polyfil setImmediate", function (done) {
     var i = global.setImmediate;
     global.setImmediate = null;
-
+    Jpex = require('jpex').extend();
     Jpex.use(defaults);
     Jpex.extend(function (_$immediate_) {
       $immediate = _$immediate_;

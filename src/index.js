@@ -7,6 +7,9 @@ var $interval = require('./$interval');
 var $immediate = require('./$immediate');
 var $typeof = require('./$typeof');
 
+exports.name = 'jpex-defaults';
+exports.silent = true;
+
 exports.install = function (options) {
     var Jpex = options.Jpex;
 
