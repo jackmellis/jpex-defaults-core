@@ -133,4 +133,18 @@ describe('$copy', function(){
     var o4 = $copy.extend({}, o1, o2, o3);
     expect(o4).toEqual(o3);
   });
+  it('should not overflow if object contains self references', function () {
+    var obj = {};
+    obj.child = {};
+    obj.child.obj = obj;
+
+    var copy = $copy.deep(obj);
+
+    expect(() => $copy.deep(obj)).not.toThrow();
+
+    obj = [];
+    obj.push(1, 2, 3, obj);
+
+    expect(() => $copy.deep(obj)).not.toThrow();
+  });
 });

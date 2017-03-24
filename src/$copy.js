@@ -1,5 +1,14 @@
 module.exports = function ($typeof) {
-    var copier = function (from, to, recur) {
+    var alreadyCopied = function (obj, hash) {
+      for (var x = 0, l = hash.length; x < l; x++){
+        if (hash[x].from === obj){
+          return obj;
+        }
+      }
+    };
+    var copier = function (from, to, recur, hash) {
+      hash = hash || [];
+
         switch($typeof(from)){
         case 'string':
         case 'number':
@@ -19,14 +28,29 @@ module.exports = function ($typeof) {
             return new RegExp(from.source, flags.join(''));
 
         case 'array':
-            return from.map(function (item) {
-                return recur ? copier(item) : item;
-            });
+            var exists = alreadyCopied(from, hash);
+            if (exists){
+              return exists.to;
+            }else{
+              to = [];
+              hash.push({from : from, to : to});
+              from.forEach(function (item) {
+                  to.push(recur ? copier(item, undefined, true, hash) : item);
+              });
+              return to;
+            }
 
         case 'object':
-            to = to || {};
+            var exists = alreadyCopied(from, hash);
+            if (exists){
+              return exists.to;
+            }else{
+              to = to || {};
+              hash.push({from : from, to : to});
+            }
+
             Object.keys(from).forEach(function (key) {
-                to[key] = recur ? copier(from[key], to[key], recur) : from[key];
+                to[key] = recur ? copier(from[key], to[key], recur, hash) : from[key];
             });
             return to;
 
