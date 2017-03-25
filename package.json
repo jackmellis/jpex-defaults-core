@@ -1,6 +1,6 @@
 {
   "name": "jpex-defaults",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0",
   "description": "Core factories for Jpex",
   "main": "src/index.js",
   "scripts": {
@@ -15,19 +15,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jackmellis/jpex-defaults-core.git"
+    "url": "git+https://github.com/jpex-js/jpex-defaults-core.git"
   },
   "author": "Jack Ellis",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jackmellis/jpex-defaults-core/issues"
+    "url": "https://github.com/jpex-js/jpex-defaults-core/issues"
   },
-  "homepage": "https://github.com/jackmellis/jpex-defaults-core#readme",
+  "homepage": "https://jpex-js.github.io/plugins/jpex-defaults",
   "devDependencies": {
     "eslint": "^3.15.0",
     "jasmine": "^2.5.3",
-    "jpex": "^2.0.0-alpha.1",
-    "jpex-build-tools": "git+https://github.com/jackmellis/jpex-build-tools.git",
+    "jpex": "^2.0.0",
+    "jpex-build-tools": "git+https://github.com/jpex-js/jpex-build-tools.git",
     "nyc": "^10.1.2",
     "publish-please": "^2.2.0"
   },

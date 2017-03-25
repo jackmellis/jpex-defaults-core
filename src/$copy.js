@@ -1,13 +1,14 @@
 module.exports = function ($typeof) {
+    var exists;
     var alreadyCopied = function (obj, hash) {
-      for (var x = 0, l = hash.length; x < l; x++){
-        if (hash[x].from === obj){
-          return obj;
+        for (var x = 0, l = hash.length; x < l; x++){
+            if (hash[x].from === obj){
+                return obj;
+            }
         }
-      }
     };
     var copier = function (from, to, recur, hash) {
-      hash = hash || [];
+        hash = hash || [];
 
         switch($typeof(from)){
         case 'string':
@@ -28,25 +29,25 @@ module.exports = function ($typeof) {
             return new RegExp(from.source, flags.join(''));
 
         case 'array':
-            var exists = alreadyCopied(from, hash);
+            exists = alreadyCopied(from, hash);
             if (exists){
-              return exists.to;
+                return exists.to;
             }else{
-              to = [];
-              hash.push({from : from, to : to});
-              from.forEach(function (item) {
-                  to.push(recur ? copier(item, undefined, true, hash) : item);
-              });
-              return to;
+                to = [];
+                hash.push({from : from, to : to});
+                from.forEach(function (item) {
+                    to.push(recur ? copier(item, undefined, true, hash) : item);
+                });
+                return to;
             }
 
         case 'object':
-            var exists = alreadyCopied(from, hash);
+            exists = alreadyCopied(from, hash);
             if (exists){
-              return exists.to;
+                return exists.to;
             }else{
-              to = to || {};
-              hash.push({from : from, to : to});
+                to = to || {};
+                hash.push({from : from, to : to});
             }
 
             Object.keys(from).forEach(function (key) {
