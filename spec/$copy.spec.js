@@ -1,150 +1,172 @@
-describe('$copy', function(){
-  var Jpex, defaults, $copy;
+import test from 'ava-spec';
+import jpex from 'jpex';
+import defaults from '../src';
 
-  beforeEach(function(){
-    $copy = null;
-    Jpex = require('jpex').extend();
-    defaults = require('../src');
-    Jpex.use(defaults);
+test.beforeEach(function (t) {
+  let Jpex = jpex.extend();
+  Jpex.use(defaults);
+  let $copy = Jpex.$resolve('$copy');
+  t.context = {Jpex, $copy};
+});
 
-    BaseClass = Jpex.extend(function(_$copy_){
-      $copy = _$copy_;
-    });
-    BaseClass();
-  });
+test('should copy a primitive', function (t) {
+  let {$copy} = t.context;
+  t.is($copy('abcd'), 'abcd');
+});
+test('should copy a date', function (t) {
+  let {$copy} = t.context;
 
-  it('should copy a primitive', function () {
-    expect($copy('abcd')).toBe('abcd');
-  });
-  it('should copy a date', function () {
-    var d = new Date();
-    var d2 = $copy(d);
+  var d = new Date();
+  var d2 = $copy(d);
 
-    expect(d).not.toBe(d2);
-    expect(d2 instanceof Date).toBe(true);
-    expect(d.toString()).toBe(d2.toString());
-  });
-  it('should copy a regular expression', function () {
-    var r = /abd/g;
-    var r2 = $copy(r);
+  t.not(d, d2);
+  t.true(d2 instanceof Date);
+  t.is(d.toString(), d2.toString());
+});
+test('should copy a regular expression', function (t) {
+  let {$copy} = t.context;
 
-    expect(r).not.toBe(r2);
-    expect(r).toEqual(r2);
-    expect(r2.global).toBe(true);
-    expect(r2.ignoreCase).not.toBe(true);
-  });
-  it('should copy an array', function () {
-    var arr = ['a', 'b', 'c', 'd'];
-    var arr2 = $copy(arr);
+  var r = /abd/g;
+  var r2 = $copy(r);
 
-    expect(arr2).not.toBe(arr);
-    expect(arr2).toEqual(arr);
-  });
-  it('should copy an object', function () {
-    var o = {
-      a : 'apple',
-      b : 'bean'
-    };
-    var o2 = $copy(o);
+  t.not(r, r2);
+  t.deepEqual(r, r2);
+  t.true(r2.global);
+  t.not(r2.ignoreCase, true);
+});
+test('should copy an array', function (t) {
+  let {$copy} = t.context;
 
-    expect(o2).not.toBe(o);
-    expect(o2).toEqual(o);
-  });
-  it('should not copy sub properties of an object', function () {
-    var o = { obj : {} };
-    var o2 = $copy.shallow(o);
+  var arr = ['a', 'b', 'c', 'd'];
+  var arr2 = $copy(arr);
 
-    expect(o2).not.toBe(o);
-    expect(o2).toEqual(o);
-    expect(o2.obj).toBe(o.obj);
-  });
+  t.not(arr2, arr);
+  t.deepEqual(arr2, arr);
+});
+test('should copy an object', function (t) {
+  let {$copy} = t.context;
 
-  it('should deep copy an array', function () {
-    var arr = [
-      [1, 2, 3],
-      { obj : {} },
-      'string'
-    ];
-    var arr2 = $copy.deep(arr);
+  var o = {
+    a : 'apple',
+    b : 'bean'
+  };
+  var o2 = $copy(o);
 
-    expect(arr2).not.toBe(arr);
-    expect(arr2[0]).not.toBe(arr[0]);
-    expect(arr2[1]).not.toBe(arr[1]);
-    expect(arr2).toEqual(arr);
-  });
-  it('should deep copy an object', function () {
-    var o = { obj : {} };
-    var o2 = $copy.deep(o);
+  t.not(o2, o);
+  t.deepEqual(o2, o);
+});
+test('should not copy sub properties of an object', function (t) {
+  let {$copy} = t.context;
 
-    expect(o2).not.toBe(o);
-    expect(o2).toEqual(o);
-    expect(o2.obj).not.toBe(o.obj);
-    expect(o2.obj).toEqual(o.obj);
-  });
+  var o = { obj : {} };
+  var o2 = $copy.shallow(o);
 
-  it('should copy multiple objects into a target object', function () {
-    var o1 = {a : 'first'};
-    var o2 = {a : 'second', b : 'second'};
-    var o3 = {b : 'third', c : 'third'};
-    var o4 = {b : 'fourth', d : 'fourth'};
+  t.not(o2, o);
+  t.deepEqual(o2, o);
+  t.is(o2.obj, o.obj);
+});
 
-    var o5 = $copy.extend(o1, o2, o3, o4);
+test('should deep copy an array', function (t) {
+  let {$copy} = t.context;
 
-    expect(o5.a).toBe('second');
-    expect(o5.b).toBe('fourth');
-    expect(o5.c).toBe('third');
-    expect(o5.d).toBe('fourth');
-  });
-  it('should mutate the target', function () {
-    var o1 = {a : 'first'};
-    var o2 = {a : 'second', b : 'second'};
-    var o3 = {b : 'third', c : 'third'};
-    var o4 = {b : 'fourth', d : 'fourth'};
+  var arr = [
+    [1, 2, 3],
+    { obj : {} },
+    'string'
+  ];
+  var arr2 = $copy.deep(arr);
 
-    var o5 = $copy.extend(o1, o2, o3, o4);
+  t.not(arr2, arr);
+  t.not(arr2[0], arr[0]);
+  t.not(arr2[1], arr[1]);
+  t.deepEqual(arr2, arr);
+});
+test('should deep copy an object', function (t) {
+  let {$copy} = t.context;
 
-    expect(o5).toBe(o1);
-  });
-  it('should deep copy', function () {
-    var o1 = { obj : {
-      x : 'first'
-    } };
-    var o2 = { obj : {
-      x : 'second'
-    } };
-    $copy.extend(o1, o2);
+  var o = { obj : {} };
+  var o2 = $copy.deep(o);
 
-    expect(o1.obj.x).toBe('second');
-  });
-  it('should combine objects', function () {
-    var o1 = {obj : {a : 'first'}};
-    var o2 = {obj : {b : 'second'}};
-    var o3 = {obj : {c : 'third'}};
-    $copy.extend(o1, o2, o3);
+  t.not(o2, o);
+  t.deepEqual(o2, o);
+  t.not(o2.obj, o.obj);
+  t.deepEqual(o2.obj, o.obj);
+});
 
-    expect(o1.obj.a).toBe('first');
-    expect(o1.obj.b).toBe('second');
-    expect(o1.obj.c).toBe('third');
-  });
-  it("should overwrite array elements", function () {
-    var o1 = { arr : [1, 2, 3]};
-    var o2 = { arr : [4, 5, 6]};
-    var o3 = { arr : [7, 8, 9]};
-    var o4 = $copy.extend({}, o1, o2, o3);
-    expect(o4).toEqual(o3);
-  });
-  it('should not overflow if object contains self references', function () {
-    var obj = {};
-    obj.child = {};
-    obj.child.obj = obj;
+test('should copy multiple objects into a target object', function (t) {
+  let {$copy} = t.context;
 
-    var copy = $copy.deep(obj);
+  var o1 = {a : 'first'};
+  var o2 = {a : 'second', b : 'second'};
+  var o3 = {b : 'third', c : 'third'};
+  var o4 = {b : 'fourth', d : 'fourth'};
 
-    expect(() => $copy.deep(obj)).not.toThrow();
+  var o5 = $copy.extend(o1, o2, o3, o4);
 
-    obj = [];
-    obj.push(1, 2, 3, obj);
+  t.is(o5.a, 'second');
+  t.is(o5.b, 'fourth');
+  t.is(o5.c, 'third');
+  t.is(o5.d, 'fourth');
+});
+test('should mutate the target', function (t) {
+  let {$copy} = t.context;
 
-    expect(() => $copy.deep(obj)).not.toThrow();
-  });
+  var o1 = {a : 'first'};
+  var o2 = {a : 'second', b : 'second'};
+  var o3 = {b : 'third', c : 'third'};
+  var o4 = {b : 'fourth', d : 'fourth'};
+
+  var o5 = $copy.extend(o1, o2, o3, o4);
+
+  t.is(o5, o1);
+});
+test('should deep copy', function (t) {
+  let {$copy} = t.context;
+
+  var o1 = { obj : {
+    x : 'first'
+  } };
+  var o2 = { obj : {
+    x : 'second'
+  } };
+  $copy.extend(o1, o2);
+
+  t.is(o1.obj.x, 'second');
+});
+test('should combine objects', function (t) {
+  let {$copy} = t.context;
+
+  var o1 = {obj : {a : 'first'}};
+  var o2 = {obj : {b : 'second'}};
+  var o3 = {obj : {c : 'third'}};
+  $copy.extend(o1, o2, o3);
+
+  t.is(o1.obj.a, 'first');
+  t.is(o1.obj.b, 'second');
+  t.is(o1.obj.c, 'third');
+});
+test("should overwrite array elements", function (t) {
+  let {$copy} = t.context;
+
+  var o1 = { arr : [1, 2, 3]};
+  var o2 = { arr : [4, 5, 6]};
+  var o3 = { arr : [7, 8, 9]};
+  var o4 = $copy.extend({}, o1, o2, o3);
+  t.deepEqual(o4, o3);
+});
+test('should not overflow if object contains self references', function (t) {
+  let {$copy} = t.context;
+
+  var obj = {};
+  obj.child = {};
+  obj.child.obj = obj;
+
+  var copy = $copy.deep(obj);
+
+  t.notThrows(() => $copy.deep(obj));
+
+  obj = [];
+  obj.push(1, 2, 3, obj);
+
+  t.notThrows(() => $copy.deep(obj));
 });

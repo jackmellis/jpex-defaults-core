@@ -1,20 +1,25 @@
-describe("$interval", function () {
-  var Jpex, defaults, $interval;
-  beforeEach(function () {
-    Jpex = require('jpex').extend();
-    defaults = require('../src');
-    Jpex.use(defaults);
-    Jpex.extend(function (_$interval_) {
-      $interval = _$interval_;
-    })();
-  });
+import test from 'ava-spec';
+import jpex from 'jpex';
+import defaults from '../src';
 
-  it("should set an interval", function (done) {
+test.beforeEach(function (t) {
+  let Jpex = jpex.extend();
+  Jpex.use(defaults);
+  let $interval = Jpex.$resolve('$interval');
+  t.context = {Jpex, $interval};
+});
+
+
+test("should set an interval", function (t) {
+  let {$interval} = t.context;
+
+  return new Promise(resolve => {
     var count = 0;
     var timer = $interval(() => {
       if (count++ > 5){
         $interval.clear(timer);
-        done();
+        t.pass();
+        resolve();
       }
     });
   });

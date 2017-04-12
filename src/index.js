@@ -21,7 +21,7 @@ exports.install = function (options) {
 
     Jpex.register.factory('$promise', ['$$promise'], $promise).lifecycle.application();
 
-    Jpex.register.factory('$timeout', [], $timeout).lifecycle.application();
+    Jpex.register.factory('$timeout', ['$promise'], $timeout).lifecycle.application();
 
     Jpex.register.factory('$interval', [], $interval).lifecycle.application();
 

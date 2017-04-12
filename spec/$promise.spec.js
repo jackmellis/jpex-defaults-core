@@ -1,51 +1,60 @@
-describe('Jpex - Default Factories', function(){
-  describe('$promise', function(){
-    var Jpex, defaults, BaseClass, $promise;
+import test from 'ava-spec';
+import Sinon from 'sinon';
+import jpex from 'jpex';
+import defaults from '../src';
 
-    beforeEach(function(){
-      Jpex = require('jpex');
-      defaults = require('../src');
-      Jpex.use(defaults);
+test.beforeEach(function (t) {
+  let sinon = Sinon.sandbox.create();
+  let Jpex = jpex.extend();
+  Jpex.use(defaults);
+  let $promise = Jpex.$resolve('$promise');
+  t.context = {Jpex, $promise, sinon};
+});
+test.afterEach(function (t) {
+  t.context.sinon.restore();
+});
 
-      BaseClass = Jpex.extend(function(_$promise_){
-        $promise = _$promise_;
-      });
-      BaseClass();
-    });
+test("creates a promise", function (t) {
+  let {$promise} = t.context;
 
-    it("creates a promise", function (done) {
-      $promise(function (resolve) {
-        setTimeout(resolve, 100);
-      })
-      .then(function () {
-        done();
-      });
-    });
-
-    it("resolves all promises", function (done) {
-      $promise.all([
-        123,
-        $promise(resolve => { setTimeout(resolve, 100); })
-      ]).then(function () {
-        done();
-      });
-    });
-
-    it("resolves any promise", function (done) {
-      $promise.race([
-        123,
-        $promise(resolve => {})
-      ]).then(function () {
-        done();
-      });
-    });
-
-    it("creates a resolved promise", function (done) {
-      $promise.resolve().then(done);
-    });
-
-    it("creates a rejected promise", function (done) {
-      $promise.reject().catch(done);
-    });
+  return $promise(function (resolve) {
+    setTimeout(resolve, 100);
+  })
+  .then(function () {
+    t.pass();
   });
+});
+
+test("resolves all promises", function (t) {
+  let {$promise} = t.context;
+
+  return $promise.all([
+    123,
+    $promise(resolve => { setTimeout(resolve, 100); })
+  ]).then(function () {
+    t.pass();
+  });
+});
+
+test("resolves any promise", function (t) {
+  let {$promise} = t.context;
+
+  return $promise.race([
+    123,
+    $promise(resolve => {})
+  ]).then(function () {
+    t.pass();
+  });
+});
+
+test("creates a resolved promise", function (t) {
+  let {$promise} = t.context;
+
+  return $promise.resolve().then(() => t.pass());
+});
+
+test("creates a rejected promise", function (t) {
+  let {$promise} = t.context;
+
+  return $promise.reject().catch(() => t.pass());
 });

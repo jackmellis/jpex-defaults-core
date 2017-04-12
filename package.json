@@ -4,14 +4,23 @@
   "description": "Core factories for Jpex",
   "main": "src/index.js",
   "scripts": {
-    "test": "jasmine",
-    "coverage": "nyc jasmine",
+    "test": "ava",
+    "coverage": "nyc npm test",
     "lint": "eslint src --fix",
     "lcov-fix": "node node_modules/jpex-build-tools/lcov-fix",
     "build": "node node_modules/jpex-build-tools/build --entry ./src --output ./dist/jpex-defaults.js --name jpexDefaults && node node_modules/jpex-build-tools/build --entry ./src --output ./dist/jpex-defaults.min.js --name jpexDefaults  --minify",
     "publish-please": "publish-please",
     "prepublish": "publish-please guard",
     "travis-prepublish": "node node_modules/jpex-build-tools/travis-prepublish"
+  },
+  "ava": {
+    "files": [
+      "spec/**/*.spec.js"
+    ],
+    "source": [
+      "src/**/*.js"
+    ],
+    "concurrency": 8
   },
   "repository": {
     "type": "git",
@@ -24,12 +33,15 @@
   },
   "homepage": "https://jpex-js.github.io/plugins/jpex-defaults",
   "devDependencies": {
+    "ava": "^0.19.1",
+    "ava-spec": "^1.1.0",
     "eslint": "^3.15.0",
     "jasmine": "^2.5.3",
     "jpex": "^2.0.0",
     "jpex-build-tools": "git+https://github.com/jpex-js/jpex-build-tools.git",
     "nyc": "^10.1.2",
-    "publish-please": "^2.2.0"
+    "publish-please": "^2.2.0",
+    "sinon": "^2.1.0"
   },
   "peerDependencies": {
     "jpex": "^2.0.0"

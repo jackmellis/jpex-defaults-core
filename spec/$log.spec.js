@@ -1,44 +1,53 @@
-describe('$log', function(){
-  var Jpex, defaults, BaseClass, $log;
+import test from 'ava-spec';
+import Sinon from 'sinon';
+import jpex from 'jpex';
+import defaults from '../src';
 
-  beforeEach(function(){
-    $log = null;
-    Jpex = require('jpex').extend();
-    defaults = require('../src');
-    Jpex.use(defaults);
-    BaseClass = Jpex.extend(function(_$log_){
-      $log = _$log_;
-    });
-    BaseClass();
-  });
+test.beforeEach(function (t) {
+  let sinon = Sinon.sandbox.create();
+  let Jpex = jpex.extend();
+  Jpex.use(defaults);
+  let $log = Jpex.$resolve('$log');
+  t.context = {Jpex, $log, sinon};
+});
+test.afterEach(function (t) {
+  t.context.sinon.restore();
+});
 
-  it("should log a message", function () {
-    spyOn(console, "log");
-    $log('direct');
-    $log.log('indirect');
+test("should log a message", function (t) {
+  let {$log, sinon} = t.context;
 
-    expect(console.log).toHaveBeenCalledWith('direct');
-    expect(console.log).toHaveBeenCalledWith('indirect');
-  });
+  sinon.stub(console, "log");
+  $log('direct');
+  $log.log('indirect');
 
-  it("should log info", function () {
-    spyOn(console, "info");
-    $log.info('information');
+  t.true(console.log.calledWith('direct'));
+  t.true(console.log.calledWith('indirect'));
+});
 
-    expect(console.info).toHaveBeenCalledWith('information');
-  });
+test("should log info", function (t) {
+  let {$log, sinon} = t.context;
 
-  it("should log a warning", function () {
-    spyOn(console, "warn");
-    $log.warn('warning');
+  sinon.stub(console, "info");
+  $log.info('information');
 
-    expect(console.warn).toHaveBeenCalledWith('warning');
-  });
+  t.true(console.info.calledWith('information'));
+});
 
-  it("should log an error", function () {
-    spyOn(console, "error");
-    $log.error('error');
+test("should log a warning", function (t) {
+  let {$log, sinon} = t.context;
 
-    expect(console.error).toHaveBeenCalledWith('error');
-  });
+  sinon.stub(console, "warn");
+  $log.warn('warning');
+
+  t.true(console.warn.calledWith('warning'));
+});
+
+test("should log an error", function (t) {
+  let {$log, sinon} = t.context;
+
+  sinon.stub(console, "error");
+  $log.error('error');
+
+  t.true(console.error.calledWith('error'));
 });

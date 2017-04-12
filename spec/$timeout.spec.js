@@ -1,29 +1,51 @@
-describe("$timeout", function () {
-  var Jpex, defaults, $timeout;
-  beforeEach(function () {
-    Jpex = require('jpex').extend();
-    defaults = require('../src');
-    Jpex.use(defaults);
-    Jpex.extend(function (_$timeout_) {
-      $timeout = _$timeout_;
-    })();
-  });
+import test from 'ava-spec';
+import Sinon from 'sinon';
+import jpex from 'jpex';
+import defaults from '../src';
 
-  it("should set a timeout", function (done) {
-    $timeout(done, 100);
-  });
+test.beforeEach(function (t) {
+  let sinon = Sinon.sandbox.create();
+  let Jpex = jpex.extend();
+  Jpex.use(defaults);
+  let $timeout = Jpex.$resolve('$timeout');
+  t.context = {Jpex, $timeout, sinon};
+});
+test.afterEach(function (t) {
+  t.context.sinon.restore();
+});
 
-  it("should clear a timeout", function (done) {
+
+test("should set a timeout", function (t) {
+  let {$timeout} = t.context;
+
+  return new Promise(resolve => {
+    $timeout(() => {
+      t.pass();
+      resolve();
+    }, 100);
+  });
+});
+
+test("should clear a timeout", function (t) {
+  let {$timeout} = t.context;
+
+  return new Promise(resolve => {
     var called = false;
-    var t = $timeout(function () {
+    var t2 = $timeout(function () {
       called = true;
     }, 50);
 
-    $timeout.clear(t);
+    $timeout.clear(t2);
 
     setTimeout(function () {
-      expect(called).toBe(false);
-      done();
+      t.false(called);
+      resolve();
     }, 200);
   });
+});
+
+test('should promisify a timeout', function (t) {
+  let {$timeout} = t.context;
+
+  return $timeout(50).then(() => t.pass());
 });
