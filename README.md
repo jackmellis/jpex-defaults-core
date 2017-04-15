@@ -46,7 +46,7 @@ var t = Jpex.$resolve('$timeout');
 ## API  
 ### $timeout  
 `$timeout(callback, delay)`  
-`$timeout` is the equivalent of the `setTimeout` function. The callback function is called after the value of *delay* has passed. The callback function is only called once.  
+`$timeout` is the equivalent of the `setTimeout` function. The callback function is called after the value of *delay* has passed. The callback function is only called once.  If no `callback` function is provided, `$timeout` will return a promise that will be resolved after the specified timeout.
 
 ### $interval
 `$interval(callback, delay)`  
@@ -54,7 +54,7 @@ var t = Jpex.$resolve('$timeout');
 
 ### $immediate
 `$immediate(callback)`
-`$immediate` calls the callback function on the next available event loop. This is the equivalent of `setImmediate` in *NodeJs* or `setTimeout(fn, 0)` in a browser.  
+`$immediate` calls the callback function on the next available event loop. This is the equivalent of `setImmediate` in *NodeJs* or `setTimeout(fn, 0)` in a browser. If no `callback` function is provided, `$immediate` will return a promise.
 
 ### $log  
 `$log(message, [message2, message3...])`  
